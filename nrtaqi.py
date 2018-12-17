@@ -1,22 +1,26 @@
 # coding: utf-8
+import json
+import time
+from datetime import datetime
+from urllib.parse import urljoin
+
+import numpy as np
 import requests
 from bs4 import BeautifulSoup
-from urllib.parse import urljoin
-import json, time
-import numpy as np
-import pandas as pd
 
 
 def main():
+	# process the dowloaded data
 	with open("nrtaqi.json", "r", encoding='gbk') as f:
 		nrtaqi = json.load(f)
 	for prov_name, prov in nrtaqi.items():
 		for city_name, city in prov.items():
 			city = np.array(city).reshape(-1, 9)
-			# df = pd.DataFrame(city, columns=[city[0, :]]).set_index(city[:, 0])
-			# print(df)
-			print(city)
-			exit(0)
+			timestamp = datetime.now().strftime("%Y-%m-%d:%H")
+			if not (isinstance(nrtaqi, dict) and timestamp in nrtaqi.keys()):
+				nrtaqi[prov_name][city_name] = {timestamp: city}
+	print(nrtaqi)
+			# exit(0)
 
 def run():
 	headers = {'user-agent': 'my-app/0.0.1'}
