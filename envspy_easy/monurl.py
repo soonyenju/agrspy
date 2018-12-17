@@ -2,10 +2,9 @@
 import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
-import json
+import json, time
 
 def main():
-	headers = {'user-agent': 'my-app/0.0.1'}
 	histaqi_data = {}
 	with open("url.json", "r", encoding='utf-8') as f:
 		base_urls = json.load(f)
@@ -14,8 +13,7 @@ def main():
 		histaqi_data[prov_name] = {}
 		for city_name, city_url in city_urls.items():
 			print(city_name, city_url) 
-			response = requests.get(city_url, headers = headers)
-			response.encoding = "gbk"
+			response = connect(city_url)
 			html = response.text
 			soup = BeautifulSoup(html, "lxml")
 			boxs = soup.select("div.box.p")
@@ -29,8 +27,8 @@ def main():
 				city_data[mon_name] = vals
 				print(mon_name)
 			histaqi_data[prov_name][city_name] = city_data
-			print(histaqi_data)
-			exit(0)
+			# print(histaqi_data)
+
 
 	# with open("url.json", "w", encoding='utf-8') as f:
 	# 	# indent 超级好用，格式化保存字典，默认为None，小于0为零个空格
@@ -40,11 +38,11 @@ def main():
 
 
 # https://www.cnblogs.com/kongzhagen/p/6472746.html
+# https://www.biaodianfu.com/python-requests-retry.html
+# https://blog.csdn.net/xie_0723/article/details/52790786
 def read(city_mon_url):
 	vals = []
-	headers = {'user-agent': 'my-app/0.0.1'}
-	response = requests.get(city_mon_url, headers = headers)
-	response.encoding = "gbk"
+	response = connect(city_mon_url)
 	html = response.text
 	soup = BeautifulSoup(html, "lxml")
 	tds = soup.select("div.api_month_list td")
@@ -55,6 +53,22 @@ def read(city_mon_url):
 			vals.append(item)
 	# exit(0)
 	return vals 
+
+def connect(url, timeout = 500, max_retries = 30, encoding = "gbk"):
+	headers = {'user-agent': 'my-app/0.0.1'}
+	request_retry = requests.adapters.HTTPAdapter(max_retries = max_retries)
+	s = requests.session()
+	s.mount('https://',request_retry)  
+	s.mount('http://',request_retry)
+	try:
+		response = s.get(url, headers = headers, timeout = timeout)
+	except Exception as identifier:
+		print(identifier)
+		time.sleep(5)
+		response = s.get(url, headers = headers, timeout = timeout)	
+	response.encoding = encoding
+
+	return response
 
 
 if __name__ == "__main__":
