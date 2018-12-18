@@ -1,38 +1,61 @@
 # coding: utf-8
+import json
+import time
+from datetime import datetime
+from urllib.parse import urljoin
+
 import requests
 from bs4 import BeautifulSoup
-from urllib.parse import urljoin
-import json, time
+
+from sylogger import logger
+
 
 def main():
+	run(stop_date = "20131101", provs = ['江苏'])
+
+def run(stop_date = "20181101", provs = ['热门城市', '江苏']):
+	stop_date = datetime.strptime(stop_date, r"%Y%m%d")
 	histaqi_data = {}
 	with open("url.json", "r", encoding='utf-8') as f:
 		base_urls = json.load(f)
+	
+	keys = list(base_urls.keys())
+	for key in keys:
+		if key not in  provs:
+			base_urls.pop(key)
 
 	for prov_name, city_urls in base_urls.items():
 		histaqi_data[prov_name] = {}
 		for city_name, city_url in city_urls.items():
-			print(city_name, city_url) 
-			response = connect(city_url)
-			html = response.text
-			soup = BeautifulSoup(html, "lxml")
-			boxs = soup.select("div.box.p")
-			box = boxs[0] # Box只有一个元素
-			lis = box.select("li > a")
-			city_data = {}
-			for li in lis:
-				city_mon_url = urljoin(city_url, li["href"])
-				mon_name = li["title"]
-				vals = read(city_mon_url)
-				city_data[mon_name] = vals
-				print(mon_name)
-			histaqi_data[prov_name][city_name] = city_data
-			# print(histaqi_data)
+			try:
+				print(city_name, city_url) 
+				response = connect(city_url)
+				html = response.text
+				soup = BeautifulSoup(html, "lxml")
+				boxs = soup.select("div.box.p")
+				box = boxs[0] # Box只有一个元素
+				lis = box.select("li > a")
+				city_data = {}
+				for li in lis:
+					city_mon_url = urljoin(city_url, li["href"])
+					mon_name = li["title"]
+					print(mon_name)
+					cur_date = datetime.strptime(mon_name[0:4] + mon_name[5:7], r"%Y%m")
+					if (cur_date - stop_date).days < 0:
+						break
+					else:
+						vals = read(city_mon_url)
+						city_data[mon_name] = vals
+						print(mon_name + " is done")
+				histaqi_data[prov_name][city_name] = city_data
+				# print(histaqi_data)
+			except Exception as identifier:
+				logger('logging.log', msg_type='error', msg=identifier)
+				with open(datetime.now().strftime(r"%Y%m%d") + ".json", "w") as f:
+					json.dump(histaqi_data, f, ensure_ascii = False, indent = 4)
+				continue
 
 
-	# with open("url.json", "w", encoding='utf-8') as f:
-	# 	# indent 超级好用，格式化保存字典，默认为None，小于0为零个空格
-	# 	f.write(json.dumps(url_json, indent=4))
 	with open("aqi.json", "w") as f:
 		json.dump(histaqi_data, f, ensure_ascii = False, indent = 4)
 
@@ -73,4 +96,3 @@ def connect(url, timeout = 500, max_retries = 30, encoding = "gbk"):
 
 if __name__ == "__main__":
 	main()
-
