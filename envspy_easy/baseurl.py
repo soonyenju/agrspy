@@ -22,7 +22,7 @@ def main():
 		for dd in dds:
 			aas = dd.find_all("a", href = True)
 			for aa in aas:
-				city_name = aa.get_text()
+				city_name = aa.get_text().strip()
 				city_url = urljoin(url, aa["href"])
 				url_json[prov_name][city_name] = city_url
 

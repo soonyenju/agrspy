@@ -13,16 +13,16 @@ from sylogger import logger
 def main():
 	run(stop_date = "20131101", provs = ['江苏'])
 
-def run(stop_date = "20181101", provs = ['热门城市', '江苏']):
+def run(stop_date = "20181101", provs = []):
 	stop_date = datetime.strptime(stop_date, r"%Y%m%d")
 	histaqi_data = {}
 	with open("url.json", "r", encoding='utf-8') as f:
 		base_urls = json.load(f)
 	
-	keys = list(base_urls.keys())
-	for key in keys:
-		if key not in  provs:
-			base_urls.pop(key)
+	if provs:
+		keys = list(base_urls.keys())
+		for key in keys:
+			if key not in  provs: base_urls.pop(key)
 
 	for prov_name, city_urls in base_urls.items():
 		histaqi_data[prov_name] = {}
