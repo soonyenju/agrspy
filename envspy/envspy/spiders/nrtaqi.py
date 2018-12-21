@@ -30,10 +30,11 @@ class HistaqiSpider(scrapy.Spider):
 	def crawl_nrtaqi(self, response):
 		print(response.url)
 		print('ok')
-		minute = int(datetime.now().strftime(r"%M"))
-		if minute >= 48: 
-			print("stop")
-			return 0
+		# 时间要求，一个站点多次爬取失败需要跳过，目前有bug
+		# minute = int(datetime.now().strftime(r"%M"))
+		# if minute >= 48: 
+		# 	print("stop")
+		# 	return 0
 		table = response.xpath('//*[@id="content"]/div[4]/table')
 		tds = table.xpath('.//td/text()').extract()
 		vals = []
@@ -47,8 +48,8 @@ class HistaqiSpider(scrapy.Spider):
 		idx = out.index(re.findall(r'[\u4E00-\u9FA5]' + '空气', h1)[0][0])
 		name = out[0: idx+1] + '-' + timetag
 		print(name,vals)
-		if ''.join(vals):
-			print("lalalal")
+		# 还没数据则重爬
+		if not ''.join(vals):
 			time.sleep(5)
 			yield scrapy.Request(response.url, callback=self.crawl_nrtaqi, dont_filter=True)
 		else:
