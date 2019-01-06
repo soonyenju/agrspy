@@ -1,1 +1,4 @@
+Root url
+http://beijingair.sinaapp.com/
+全国站点的逐小时历史值
 http://beijingair.sinaapp.com/data/china/sites/20151205/csv
