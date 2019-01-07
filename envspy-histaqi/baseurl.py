@@ -5,6 +5,9 @@ from urllib.parse import urljoin
 import json
 
 def main():
+	'''
+	To crawl the base url of each city, and saved the results as a json file named baseurl. 
+	'''
 	url_json = {}
 	url = "http://www.tianqihoubao.com/aqi/"
 	headers = {'user-agent': 'my-app/0.0.1'}
@@ -29,7 +32,7 @@ def main():
 	# with open("url.json", "w", encoding='utf-8') as f:
 	# 	# indent 超级好用，格式化保存字典，默认为None，小于0为零个空格
 	# 	f.write(json.dumps(url_json, indent=4))
-	with open("url.json", "w") as f:
+	with open("url.json", "w", encoding='utf-8') as f:
 		json.dump(url_json, f, ensure_ascii = False, indent = 4)
 
 
