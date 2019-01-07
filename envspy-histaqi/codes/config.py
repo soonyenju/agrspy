@@ -18,7 +18,7 @@ class Config(object):
 		self.headers = {'user-agent': 'my-app/0.0.1'}
 		self.folder_json = self.makedirs('json')
 		self.folder_csv = self.makedirs('csv')
-		self.log_path = self.makedirs('logging.log')
+		self.log_path = self.makedirs('logging')
 		self.timeout = 500
 		self.max_retries = 30
 
