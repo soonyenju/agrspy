@@ -66,21 +66,21 @@ def fetch_data(city_data):
 	result = pd.DataFrame(result, dtype=np.float)
 	return result
 
-def preproc(filename):
-	'''
-	去除city_name中的空格
-	'''
-	with open(filename, 'r', encoding='gbk') as f:
-		histaqi = json.load(f)
+# def preproc(filename):
+# 	'''
+# 	去除city_name中的空格
+# 	'''
+# 	with open(filename, 'r', encoding='gbk') as f:
+# 		histaqi = json.load(f)
 
-	for prov_name, prov_data in histaqi.items():
-		print(prov_name)
-		for city_name in prov_data.keys():
-			print(city_name)
-			# print(histaqi[prov_name])
-			histaqi[prov_name][city_name.strip()] = histaqi[prov_name].pop(city_name)
-	with open(filename, "w") as f:
-		json.dump(histaqi, f, ensure_ascii = False, indent = 4)
+# 	for prov_name, prov_data in histaqi.items():
+# 		print(prov_name)
+# 		for city_name in prov_data.keys():
+# 			print(city_name)
+# 			# print(histaqi[prov_name])
+# 			histaqi[prov_name][city_name.strip()] = histaqi[prov_name].pop(city_name)
+# 	with open(filename, "w") as f:
+# 		json.dump(histaqi, f, ensure_ascii = False, indent = 4)
 
 if __name__ == "__main__":
 	main()
