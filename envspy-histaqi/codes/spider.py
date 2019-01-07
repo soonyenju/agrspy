@@ -88,7 +88,7 @@ class Spider(config.Config):
 							print(mon_name + " is done")
 					histaqi_data[prov_name][city_name] = city_data
 				except Exception as identifier:
-					logger(self.log_path, msg_type='error', msg=identifier)
+					logger(self.log_path.joinpath('logging.log'), msg_type='error', msg=identifier)
 					with open(datetime.now().strftime(r"%Y%m%d") + ".json", "w") as f:
 						json.dump(histaqi_data, f,
 								  ensure_ascii=False, indent=4)
@@ -175,7 +175,7 @@ class Spider(config.Config):
 					histaqi_data[prov_name][city_name] = city_data
 
 				except Exception as identifier:
-					logger(self.log_path, msg_type='error', msg=identifier)
+					logger(self.log_path.joinpath('logging.log'), msg_type='error', msg=identifier)
 					with open(datetime.now().strftime(r"%Y%m%d") + ".json", "w") as f:
 						json.dump(histaqi_data, f,
 								  ensure_ascii=False, indent=4)
