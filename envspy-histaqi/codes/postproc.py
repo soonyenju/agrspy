@@ -17,6 +17,7 @@ class Postor(config.Config):
 		self.hub_path = hub_path
 
 	def merger(self, new_path, out_name = 'merged.json', replace = False):
+		# 改用dict.update()方法！！		
 		with open(self.hub_path, "r", encoding='utf-8') as f:
 			aqi_hub = json.load(f)
 
