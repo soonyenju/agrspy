@@ -9,7 +9,7 @@ def main():
     hist_site_aqi(dates, path)
 
 def hist_site_aqi(dates, path):
-    base_url = 'http://beijingair.sinaapp.com/data/china/sites/20151205/csv'
+    base_url = 'https://quotsoft.net/air/data/china_sites_20151205.csv'
     for date in dates:
         url = base_url
         url = url.replace('20151205',date)
