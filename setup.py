@@ -12,7 +12,7 @@
 from setuptools import setup, find_packages
 
 setup(
-	name = "arspy",
+	name = "agrspy",
 	version = "0.0.1",
 	keywords = ("air quality"),
 	description = "left blank",
