@@ -67,3 +67,9 @@ if __name__ == "__main__":
 
 # how to use:
 # python chinaaqi.py 20160101 20160103
+
+# from agrspy import chinaaqi
+# s = '20160101'
+# e = '20160102'
+# dates, _, _ = chinaaqi.cal_time(s = s, e = e)
+# chinaaqi.hist_site_aqi(dates, ".")
